@@ -76,6 +76,16 @@ def get_random_commendation():
     random_commendation = random.choice(commendations)
     return random_commendation
 
+def create_commendation(schoolkid, subject, commendation):
+    lesson = get_random_lesson(schoolkid, subject)
+    Commendation.objects.create(
+        text=commendation,
+        created=lesson.date,
+        schoolkid=schoolkid,
+        subject=lesson.subject,
+        teacher=lesson.teacher 
+    )
+
 def main():
     parser = argparse.ArgumentParser(description="Исправь оценки, удали замечания и добавь похвалу")
     parser.add_argument("--name", type=str, help="Фамилия и имя ученика", default="Фролов Иван")
@@ -84,18 +94,11 @@ def main():
     args = parser.parse_args()
 
     schoolkid = get_schoolkid(args.name)
-    lesson = get_random_lesson(schoolkid, args.subject)
     commendation_text = get_random_commendation()
 
     fix_marks(schoolkid)
     remove_chastisements(schoolkid)
-    Commendation.objects.create(
-        text=commendation_text,
-        created=lesson.date,
-        schoolkid=schoolkid,
-        subject=lesson.subject,
-        teacher=lesson.teacher 
-    )
+    create_commendation(schoolkid, args.subject, commendation_text)
 
 if __name__=="__main__":
     main()
