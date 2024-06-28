@@ -33,9 +33,8 @@ def get_random_lesson(schoolkid, subject):
         random_lesson = lessons.order_by('?').first()
         return random_lesson
     else:
-        filtered_lessons = lessons.filter(subject__title__contains=subject)
         try:
-            random_lesson = random.choice(filtered_lessons)
+            random_lesson = lessons.filter(subject__title__contains=subject).order_by('?').first()
         except IndexError:
             print('Такого предмета нет. Проверьте правильность ввода')
             sys.exit(3)
