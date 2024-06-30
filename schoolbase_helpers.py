@@ -13,17 +13,18 @@ def get_schoolkid(args):
         print('Такого имени нет. Проверьте правильность ввода')
         sys.exit(2)
 
-def get_random_lesson(schoolkid, subject):
+def get_random_lesson(schoolkid, args):
     lessons = Lesson.objects.filter(year_of_study=schoolkid.year_of_study, group_letter=schoolkid.group_letter)
-    if not subject:
+    if not args:
         random_lesson = lessons.order_by('?').first()
         return random_lesson
     else:
-        try:
-            random_lesson = lessons.filter(subject__title__contains=subject).order_by('?').first()
-        except IndexError:
+        random_lesson = lessons.filter(subject__title__contains=args).order_by('?').first()
+        if not random_lesson:
             print('Такого предмета нет. Проверьте правильность ввода')
             sys.exit(3)
+        else:
+            return random_lesson
 
 def get_random_commendation():
     commendations = [
